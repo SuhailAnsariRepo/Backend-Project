@@ -4,6 +4,7 @@ const Admin = require("../model/Admin");
 const all_admins = async (req, res) => {
     try {
         const admins = await Admin.find();
+        console.log(admins);
         res.json(admins);
       } catch (error) {
         res.json({ message: error });
