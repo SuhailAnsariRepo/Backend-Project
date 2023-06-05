@@ -13,8 +13,12 @@ const all_admins = async (req, res) => {
 
 //Get Single Admin
 const get_admin = async (req, res) => {
+  console.log("inside get admin")
     try {
-        const admin = await Admin.findById(req.params.admin_id);
+        console.log(req.params.admin_id);
+        const admin = await Admin.find({admin_id:req.params.admin_id})
+        // const admin = await Admin.findById(req.params.admin_id);
+        console.log(admin);
         res.json(admin);
       } catch (error) {
         res.json({ message: error });
@@ -23,6 +27,7 @@ const get_admin = async (req, res) => {
 
 //Add New Admin
 const add_admin = async (req, res) => {
+  console.log("inside put")
     const admin = new Admin({
         admin_id: req.body.admin_id,
         name: req.body.name,
@@ -41,7 +46,7 @@ const add_admin = async (req, res) => {
 //Delete Admin
 const delete_admin = async (req, res) => {
     try {
-        const removeAdmin = await Admin.findByIdAndDelete(req.params.admin_id);
+        const removeAdmin = await Admin.deleteOne({admin_id:req.params.admin_id});
         res.json(removeAdmin);
       } catch (error) {
         res.json({ message: error });
@@ -57,9 +62,11 @@ const update_admin = async (req, res) => {
             email: req.body.email,
             password: req.body.password
         };
+
+        console.log(admin);
     
-        const updatedAdmin = await Admin.findByIdAndUpdate(
-          { _id: req.params.admin_id },
+        const updatedAdmin = await Admin.updateOne(
+          { admin_id: req.params.admin_id },
           admin
         );
         res.json(updatedAdmin);
