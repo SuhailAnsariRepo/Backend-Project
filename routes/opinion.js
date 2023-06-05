@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const opinionController = require('../controllers/opinionController')
 
-router.post("/", opinionController.add_opinion);
+router.post("/", opinionController.update_opinion);
 router.get("/", opinionController.all_opinions);
 router.get("/:_id", opinionController.get_opinion);
 
