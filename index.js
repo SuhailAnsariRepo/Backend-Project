@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(cors());
 
 //Route Middleware
-// app.use("/api/admins", adminRoutes);
+app.use("/api/admins", adminRoutes);
 app.use("/api/opinions", opinionRoutes);
 
 app.listen(PORT, () => {

@@ -29,7 +29,7 @@ const add_opinion = async (req, res) => {
       description: req.body.description,
       start_date: req.body.start_date,
       end_date: req.body.end_date,
-      options: req.body.options
+      status: req.body.status
       });
     
       try {
@@ -60,7 +60,7 @@ const update_opinion = async (req, res) => {
             description: req.body.description,
             start_date: req.body.start_date,
             end_date: req.body.end_date,
-            options: req.body.options
+            status: req.body.status
         };
 
         console.log(opinion);

@@ -13,7 +13,7 @@ const OpinionSchema = new mongoose.Schema({
   description: { type: String },
   start_date: { type: Date },
   end_date: { type: Date },
-  options: { type: String }
+  status: { type: String }
 });
 
 OpinionSchema.pre('save', function (next) {
