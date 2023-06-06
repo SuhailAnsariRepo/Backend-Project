@@ -29,7 +29,6 @@ const get_admin = async (req, res) => {
 const add_admin = async (req, res) => {
   console.log("inside put")
     const admin = new Admin({
-        admin_id: req.body.admin_id,
         name: req.body.name,
         email: req.body.email,
         password: req.body.password
@@ -57,7 +56,6 @@ const delete_admin = async (req, res) => {
 const update_admin = async (req, res) => {
     try {
         const admin = {
-            admin_id: req.body.admin_id,
             name: req.body.name,
             email: req.body.email,
             password: req.body.password
@@ -65,7 +63,7 @@ const update_admin = async (req, res) => {
 
         console.log(admin);
     
-        const updatedAdmin = await Admin.updateOne(
+        const updatedAdmin = await Admin.findOneAndUpdate(
           { admin_id: req.params.admin_id },
           admin
         );

@@ -21,6 +21,17 @@ const get_opinion = async (req, res) => {
       }
 };
 
+//Get Single Opinion
+const get_status = async (req, res) => {
+  console.log("inside get opinion")
+    try {
+        const opinion = await Opinion.find({status:req.params.status})
+        res.json(opinion);
+      } catch (error) {
+        res.json({ message: error });
+      }
+};
+
 //Add New Opinion
 const add_opinion = async (req, res) => {
   console.log("inside post")
@@ -29,7 +40,12 @@ const add_opinion = async (req, res) => {
       description: req.body.description,
       start_date: req.body.start_date,
       end_date: req.body.end_date,
-      status: req.body.status
+      status: req.body.status,
+      source_of_truth: req.body.source_of_truth,
+      rules: req.body.rules,
+      min_price: req.body.min_price,
+      max_price: req.body.max_price,
+      opinion_type: req.body.opinion_type
       });
     
       try {
@@ -60,16 +76,20 @@ const update_opinion = async (req, res) => {
             description: req.body.description,
             start_date: req.body.start_date,
             end_date: req.body.end_date,
-            status: req.body.status
+            status: req.body.status,
+            source_of_truth: req.body.source_of_truth,
+            rules: req.body.rules,
+            min_price: req.body.min_price,
+            max_price: req.body.max_price,
+            opinion_type: req.body.opinion_type
         };
-
         console.log(opinion);
     
-        const updatedopinion = await Opinion.updateOne(
+        const updatedopinion = await Opinion.findOneAndUpdate(
           { opinion_id: req.params.opinion_id },
           opinion
         );
-        res.json(updatedopinion);
+        res.json("Opinion updated sucessfully");
       } catch (error) {
         res.json({ message: error });
       }
@@ -80,5 +100,6 @@ module.exports = {
     get_opinion,
     add_opinion,
     delete_opinion,
-    update_opinion
+    update_opinion,
+    get_status
 }

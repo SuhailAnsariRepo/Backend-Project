@@ -13,7 +13,12 @@ const OpinionSchema = new mongoose.Schema({
   description: { type: String },
   start_date: { type: Date },
   end_date: { type: Date },
-  status: { type: String }
+  status: { type: String },
+  source_of_truth: { type: String },
+  rules: { type: String },
+  min_price: { type: Number },
+  max_price: { type: Number },
+  opinion_type: { type: String },
 });
 
 OpinionSchema.pre('save', function (next) {
