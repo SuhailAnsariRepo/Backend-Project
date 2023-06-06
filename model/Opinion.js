@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
-const autoIncrement = require('mongoose-sequence')(mongoose);
+// const autoIncrement = require('mongoose-sequence')(mongoose);
 
 const OpinionSchema = new mongoose.Schema({
-    _id: {
+    opinion_id: {
         type: Number,
+        required: true,
     },
     title: {
         type: String
@@ -22,7 +23,7 @@ const OpinionSchema = new mongoose.Schema({
     }
 });
 
-OpinionSchema.plugin(autoIncrement);
+// OpinionSchema.plugin(autoIncrement);
 
 
 const Opinion = mongoose.model("Opinion", OpinionSchema);

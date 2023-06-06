@@ -1,10 +1,9 @@
 const Opinion = require("../model/Opinion");
-
+let opinionLength = 0;
 //Get All Opinions
 const all_opinions = async (req, res) => {
     try {
         const opinions = await Opinion.find();
-        console.log(opinions);
         res.json(opinions);
       } catch (error) {
         res.json({ message: error });
@@ -15,10 +14,7 @@ const all_opinions = async (req, res) => {
 const get_opinion = async (req, res) => {
   console.log("inside get opinion")
     try {
-        console.log(req.params._id);
-        // const opinion = await opinion.find({opinion_id:req.params.opinion_id})
-        const opinion = await Opinion.findById(req.params._id);
-        console.log(opinion);
+        const opinion = await Opinion.find({opinion_id:req.params.opinion_id})
         res.json(opinion);
       } catch (error) {
         res.json({ message: error });
@@ -27,21 +23,44 @@ const get_opinion = async (req, res) => {
 
 //Add New Opinion
 const add_opinion = async (req, res) => {
-  console.log("inside put")
+  const countOpinions = async () => {
+    try {
+      const count = await Opinion.countDocuments({});
+      return count;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  countOpinions()
+  .then( async (count) => {
+    console.log(opinionLength);
+    opinionLength = count; // Store the count value globally
+    console.log("Opinion length is: " + opinionLength);
+
     const opinion = new Opinion({
-        title: req.body.Title,
-        description: req.body.Description,
-        start_date: req.body.Start_Date,
-        end_date: req.body.End_Date,
-        options: req.body.Options
-      });
-    
-      try {
-        const savedopinion = await opinion.save();
-        res.send(savedopinion);
-      } catch (error) {
-        res.status(400).send(error);
-      }
+      opinion_id: opinionLength+1,
+      title: req.body.title,
+      description: req.body.description,
+      start_date: req.body.start_date,
+      end_date: req.body.end_date,
+      options: req.body.options
+    });
+    console.log(opinion);
+    try {
+      const savedopinion = await opinion.save();
+      console.log(savedopinion);
+      res.json({
+          opinion_id : savedopinion.opinion_id
+        });
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  })
+  .catch((error) => {
+    // Handle any errors that occurred during counting
+    console.log(error);
+  });
 };
 
 //Delete Opinion
