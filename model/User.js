@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
 UserSchema.pre('save', function (next) {
   const doc = this;
   Counter.findByIdAndUpdate(
-    { _id: 'UserId' },
+    { _id: 'userId' },
     { $inc: { sequence_value: 1 } },
     { new: true, upsert: true }
   )
