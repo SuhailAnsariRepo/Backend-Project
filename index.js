@@ -5,7 +5,7 @@ const app = express();
 const cors = require("cors");
 dotenv.config();
 const uri = process.env.DB_CONNECT;
-
+const PORT = process.env.PORT || 3030;
 
 async function run() {
   try {
@@ -25,7 +25,6 @@ run().catch(console.dir);
 const adminRoutes = require("./routes/admin");
 const opinionRoutes = require("./routes/opinion")
 
-
 // Middlewares
 app.use(express.json());
 app.use(cors());
@@ -34,5 +33,7 @@ app.use(cors());
 // app.use("/api/admins", adminRoutes);
 app.use("/api/opinions", opinionRoutes);
 
-app.listen(4000, () => {console.log("Server up and running at port 4000")});
+app.listen(PORT, () => {
+  console.log(`server started on port ${PORT}`);
+});
 
