@@ -23,50 +23,29 @@ const get_opinion = async (req, res) => {
 
 //Add New Opinion
 const add_opinion = async (req, res) => {
-  const countOpinions = async () => {
-    try {
-      const count = await Opinion.countDocuments({});
-      return count;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  
-  countOpinions()
-  .then( async (count) => {
-    console.log(opinionLength);
-    opinionLength = count; // Store the count value globally
-    console.log("Opinion length is: " + opinionLength);
-
-    const opinion = new Opinion({
-      opinion_id: opinionLength+1,
+  console.log("inside post")
+  const opinion = new Opinion({
       title: req.body.title,
       description: req.body.description,
       start_date: req.body.start_date,
       end_date: req.body.end_date,
       options: req.body.options
-    });
-    console.log(opinion);
-    try {
-      const savedopinion = await opinion.save();
-      console.log(savedopinion);
-      res.json({
-          opinion_id : savedopinion.opinion_id
+      });
+    
+      try {
+        const savedadmin = await opinion.save();
+        res.json({
+          opinion_id : savedadmin.opinion_id
         });
-    } catch (error) {
-      res.status(400).send(error);
-    }
-  })
-  .catch((error) => {
-    // Handle any errors that occurred during counting
-    console.log(error);
-  });
+      } catch (error) {
+        res.status(400).send(error);
+      }
 };
 
 //Delete Opinion
 const delete_opinion = async (req, res) => {
     try {
-        const removeOpinion = await Opinion.deleteOne({_id:req.params._id});
+        const removeOpinion = await Opinion.deleteOne({opinion_id:req.params.opinion_id});
         res.json(removeOpinion);
       } catch (error) {
         res.json({ message: error });
@@ -87,7 +66,7 @@ const update_opinion = async (req, res) => {
         console.log(opinion);
     
         const updatedopinion = await Opinion.updateOne(
-          { _id: req.params._id },
+          { opinion_id: req.params.opinion_id },
           opinion
         );
         res.json(updatedopinion);
