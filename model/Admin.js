@@ -1,43 +1,23 @@
 const mongoose = require("mongoose");
 
-// const CounterSchema = new mongoose.Schema({
-//     _id: { type: String, required: true },
-//     sequence_value: { type: Number, default: 1 }
-//   });
-
-// const Counter = mongoose.model('Counter', CounterSchema);
-
 const adminSchema = new mongoose.Schema({
-    admin_id : {
-        type:Number,
+    status : {
+        type: String
     },
     name : {
-        type: String,
+        type: String
     },
     email : {
         type : String,
+        unique: true
     },
     password : {
-        type : String,
+        type : String
+    },
+    mobile:{
+        type : String
     }
 });
-
-// adminSchema.pre('save', function (next) {
-//     const doc = this;
-//     Counter.findByIdAndUpdate(
-//       { _id: 'adminId' },
-//       { $inc: { sequence_value: 1 } },
-//       { new: true, upsert: true }
-//     )
-//       .then((counter) => {
-//         doc.admin_id = counter.sequence_value;
-//         next();
-//       })
-//       .catch((error) => {
-//         next(error);
-//       });
-//   });
-  
 
 const Admin = mongoose.model("Admin", adminSchema);
 module.exports = Admin;

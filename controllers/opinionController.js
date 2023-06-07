@@ -62,7 +62,7 @@ const add_opinion = async (req, res) => {
 const delete_opinion = async (req, res) => {
     try {
         const removeOpinion = await Opinion.deleteOne({opinion_id:req.params.opinion_id});
-        res.json(removeOpinion);
+        res.json({ message:`Opinion with id ${req.params.opinion_id} deleted sucessfully`});
       } catch (error) {
         res.json({ message: error });
       }
@@ -89,7 +89,7 @@ const update_opinion = async (req, res) => {
           { opinion_id: req.params.opinion_id },
           opinion
         );
-        res.json("Opinion updated sucessfully");
+        res.json({ message: "Opinion updated sucessfully" });
       } catch (error) {
         res.json({ message: error });
       }
