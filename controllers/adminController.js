@@ -1,4 +1,5 @@
 const Admin = require("../model/Admin");
+const bcrypt = require('bcrypt');
 
 //Get All Admins
 const all_admins = async (req, res) => {
@@ -33,7 +34,7 @@ const login_admin = async (req, res) => {
       const user = await Admin.findOne({ email: req.body.email });
       if (user) {
         //check if password matches
-        const result = req.body.password === user.password;
+        const result = await bcrypt.compare(req.body.password, user.password);
         if (result) {
           res.json({ message: "You have successfully logged in" });
         } else {
