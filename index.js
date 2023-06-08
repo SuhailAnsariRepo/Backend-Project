@@ -23,6 +23,7 @@ run().catch(console.dir);
 
 //Import Routes
 const adminRoutes = require("./routes/admin");
+const superadminRoutes = require("./routes/superadmin");
 const opinionRoutes = require("./routes/opinion")
 const userRoutes = require("./routes/user");
 
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use(cors());
 
 //Route Middleware
+app.use("/api/superadmins", superadminRoutes);
 app.use("/api/admins", adminRoutes);
 app.use("/api/opinions", opinionRoutes);
 app.use("/api/users", userRoutes);
