@@ -1,37 +1,37 @@
-const Admin = require("../model/Admin");
+const Partner = require("../model/Partner");
 const bcrypt = require('bcrypt');
 
-//Get All Admins
-const all_admins = async (req, res) => {
+//Get All partners
+const all_partners = async (req, res) => {
     try {
-        const admins = await Admin.find();
-        console.log(admins);
-        res.json(admins);
+        const partners = await Partner.find();
+        console.log(partners);
+        res.json(partners);
       } catch (error) {
         res.json({ message: error });
       }
 };
 
-//Get Single Admin
-const get_admin = async (req, res) => {
-  console.log("inside get admin")
+//Get Single partner
+const get_partner = async (req, res) => {
+  console.log("inside get partner")
     try {
         console.log(req.params.email);
-        const admin = await Admin.find({email:req.params.email})
-        // const admin = await Admin.findById(req.params.admin_id);
-        console.log(admin);
-        res.json(admin);
+        const partner = await Partner.find({mobile:req.params.mobile})
+        // const partner = await partner.findById(req.params.partner_id);
+        console.log(partner);
+        res.json(partner);
       } catch (error) {
         res.json({ message: error });
       }
 };
 
 //Login Using Id/Pass
-const login_admin = async (req, res) => {
+const login_partner = async (req, res) => {
   try {
       console.log("here")
       // check if the user exists
-      const user = await Admin.findOne({ email: req.body.email });
+      const user = await Partner.findOne({ email: req.body.email });
       if (user) {
         //check if password matches
         const result = await bcrypt.compare(req.body.password, user.password);
@@ -48,10 +48,10 @@ const login_admin = async (req, res) => {
     }
 };
 
-//Add New Admin
-const add_admin = async (req, res) => {
+//Add New partner
+const add_partner = async (req, res) => {
   console.log("inside post")
-    const admin = new Admin({
+    const partner = new Partner({
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
@@ -61,52 +61,55 @@ const add_admin = async (req, res) => {
       });
     
       try {
-        const savedadmin = await admin.save();
-        res.send(savedadmin);
+        const savedpartner = await partner.save();
+        res.send(savedpartner);
       } catch (error) {
         res.status(400).send(error);
       }
 };
 
-//Delete Admin
-const delete_admin = async (req, res) => {
+//Delete partner
+const delete_partner = async (req, res) => {
     try {
-        const removeAdmin = await Admin.deleteOne({email: req.params.email});
-        res.json(removeAdmin);
+        const removepartner = await Partner.deleteOne({mobile: req.params.mobile});
+        res.json(removepartner);
       } catch (error) {
         res.json({ message: error });
       }
 };
 
-//Update Admin
-const update_admin = async (req, res) => {
+//Update partner
+const update_partner = async (req, res) => {
     try {
-        const admin = {
+        const partner = {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
             mobile: req.body.mobile,
             status: req.body.status,
-            access: req.body.access
+            access: req.body.access,
+            company: req.body.company,
+            access: req.body.access,
+            revenue: req.body.revenue
         };
 
-        console.log(admin);
+        console.log(partner);
     
-        const updatedAdmin = await Admin.findOneAndUpdate(
-          { email: req.params.email },
-          admin
+        const updatedpartner = await Partner.findOneAndUpdate(
+          { mobile: req.params.mobile },
+          partner
         );
-        res.json(updatedAdmin);
+        res.json(updatedpartner);
       } catch (error) {
         res.json({ message: error });
       }
 };
 
 module.exports = {
-    all_admins,
-    get_admin,
-    add_admin,
-    delete_admin,
-    update_admin,
-    login_admin
+    all_partners,
+    get_partner,
+    add_partner,
+    delete_partner,
+    update_partner,
+    login_partner
 }

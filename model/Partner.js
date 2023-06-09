@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 
-const adminSchema = new mongoose.Schema({
+const partnerSchema = new mongoose.Schema({
     status : {
         type: String
     },
@@ -15,19 +15,25 @@ const adminSchema = new mongoose.Schema({
     password : {
         type : String
     },
+    company :{ type : String},
     mobile:{
         type : String
     },
+    kyc :{ type : String},
     access:{
-        type : String
+        type: String
+    },
+    revenue:{
+        winning_commission: { type : Number},
+        trading_fee: { type : Number}
     }
 });
 
-adminSchema.pre('save', async function(){
+partnerSchema.pre('save', async function(){
     let salt = await bcrypt.genSalt();
     let hashedString = await bcrypt.hash(this.password, salt);
     this.password=hashedString;
     console.log(this.password);
 });
-const Admin = mongoose.model("Admin", adminSchema);
-module.exports = Admin;
+const Partner = mongoose.model("Partner", partnerSchema);
+module.exports = Partner;

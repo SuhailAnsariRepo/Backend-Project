@@ -26,6 +26,7 @@ const adminRoutes = require("./routes/admin");
 const superadminRoutes = require("./routes/superadmin");
 const opinionRoutes = require("./routes/opinion")
 const userRoutes = require("./routes/user");
+const partnerRoutes = require("./routes/partner");
 
 // Middlewares
 app.use(express.json());
@@ -36,6 +37,7 @@ app.use("/api/superadmins", superadminRoutes);
 app.use("/api/admins", adminRoutes);
 app.use("/api/opinions", opinionRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/partners", partnerRoutes);
 
 app.listen(PORT, () => {
   console.log(`server started on port ${PORT}`);

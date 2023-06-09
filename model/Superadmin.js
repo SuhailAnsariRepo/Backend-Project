@@ -19,7 +19,7 @@ const superadminSchema = new mongoose.Schema({
         type : String
     },
     access:{
-        type: Number
+        type: String
     },
     revenue:{
         winning_commission: { type : Number},

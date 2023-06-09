@@ -10,26 +10,14 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
   user_id: { type: Number, unique: true },
   name: { type: String },
-  mobile: { type: Number },
+  mobile: { type: Number, unique: true },
+  revenue: { type: Number },
+  wallet: { type: Number },
+  portfolio: { type: Number },
   status: { type: String },
   kyc: { type: String },
 });
 
-// UserSchema.pre('save', function (next) {
-//   const doc = this;
-//   Counter.findByIdAndUpdate(
-//     { _id: 'UserId' },
-//     { $inc: { sequence_value: 1 } },
-//     { new: true, upsert: true }
-//   )
-//     .then((counter) => {
-//       doc.User_id = counter.sequence_value;
-//       next();
-//     })
-//     .catch((error) => {
-//       next(error);
-//     });
-// });
 
 const User = mongoose.model('User', UserSchema);
 
