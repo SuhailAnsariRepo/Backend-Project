@@ -70,7 +70,7 @@ const add_admin = async (req, res) => {
 //Delete Admin
 const delete_admin = async (req, res) => {
     try {
-        const removeAdmin = await Admin.deleteOne({admin_id:req.params.admin_id});
+        const removeAdmin = await Admin.deleteOne({email: req.params.email});
         res.json(removeAdmin);
       } catch (error) {
         res.json({ message: error });
