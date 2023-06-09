@@ -91,7 +91,7 @@ const update_admin = async (req, res) => {
         console.log(admin);
     
         const updatedAdmin = await Admin.findOneAndUpdate(
-          { admin_id: req.params.admin_id },
+          { email: req.params.email },
           admin
         );
         res.json(updatedAdmin);
