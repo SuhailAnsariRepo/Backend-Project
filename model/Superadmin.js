@@ -21,10 +21,10 @@ const superadminSchema = new mongoose.Schema({
     access:{
         type: Number
     },
-    revenue:[{
-        winning_commission: {type:Number},
+    revenue:{
+        winning_commission: { type : Number},
         trading_fee: { type : Number}
-    }]
+    }
 });
 
 superadminSchema.pre('save', async function(){
