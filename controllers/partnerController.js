@@ -57,7 +57,10 @@ const add_partner = async (req, res) => {
         password: req.body.password,
         mobile: req.body.mobile,
         status: req.body.status,
-        access: req.body.access
+        access: req.body.access,
+        company: req.body.company,
+        access: req.body.access,
+        revenue: req.body.revenue
       });
     
       try {
