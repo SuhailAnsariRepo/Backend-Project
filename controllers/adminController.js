@@ -1,5 +1,8 @@
 const Admin = require("../model/Admin");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const dotenv = require("dotenv");
+dotenv.config();
 
 //Get All Admins
 const all_admins = async (req, res) => {
@@ -26,26 +29,94 @@ const get_admin = async (req, res) => {
       }
 };
 
-//Login Using Id/Pass
-const login_admin = async (req, res) => {
+const sign_up = async (req, res) => {
   try {
-      console.log("here")
-      // check if the user exists
-      const user = await Admin.findOne({ email: req.body.email });
-      if (user) {
-        //check if password matches
-        const result = await bcrypt.compare(req.body.password, user.password);
-        if (result) {
-          res.json({ message: "You have successfully logged in" });
-        } else {
-          res.status(400).json({ error: "password doesn't match" });
-        }
-      } else {
-        res.status(400).json({ error: "email doesn't exist" });
-      }
-    } catch (error) {
-      res.status(400).json({ error });
+    // Get user input
+    
+    const { name,  password, mobile, email} = req.body;
+
+    // Validate user input
+    if (!(name && password && mobile&& email)) {
+      res.status(400).send("All input is required");
     }
+
+    // check if user already exist
+    // Validate if user exist in our database
+    const existingUser = await Admin.findOne({ email: email });
+
+    if (existingUser) {
+      return res.status(409).json({message: "Admin Already Exist. Please Login"});
+    }
+    
+    //Encrypt user password
+    let salt = await bcrypt.genSalt();
+    const hashedString = await bcrypt.hash(password, salt);
+    // Create user in our database
+    const user = await Admin.create({
+      name : name,
+      mobile: mobile,
+      email: email.toLowerCase(), // sanitize: convert email to lowercase
+      password: hashedString
+    });
+
+    // Create token
+    const token = jwt.sign(
+      { email : user.email, id : user._id },
+      process.env.TOKEN_KEY,
+    );
+    // save user token
+
+    // return new user
+    res.status(201).json({ user : user, token: token});
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({message: "Something went wrong"});
+  }
+  // Our register logic ends here
+};
+
+const login = async (req, res) => {
+
+  // Our login logic starts here
+  try {
+    // Get user input
+    const { email, password } = req.body;
+
+    // Validate user input
+    if (!(email && password)) {
+      res.status(400).send("All input is required");
+    }
+
+    // Validate if user exist in our database
+    const existingUser = await Admin.findOne({ email: email });
+
+    if (!existingUser) {
+      return res.status(409).json({message: "User not found. Please Sign up"});
+    }
+
+    const matchPassword = await bcrypt.compare(password, existingUser.password);
+      // Create token
+    if(matchPassword){
+      const token = jwt.sign(
+        { email: existingUser.email, id : existingUser._id },
+        process.env.TOKEN_KEY,
+      );
+
+      res.cookie("token", token, { maxAge: jwtExpirySeconds * 24*60*60 })
+
+      // save user token
+      res.status(201).json({ user : existingUser, token: token});
+
+
+      // user
+      // res.status(200).json(user);
+    }
+    res.status(400).json({message: "Invalid Credentials"});
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({message: "Something went wrong"});
+  }
+  // Our register logic ends here
 };
 
 //Add New Admin
@@ -108,5 +179,6 @@ module.exports = {
     add_admin,
     delete_admin,
     update_admin,
-    login_admin
+    login,
+    sign_up
 }
