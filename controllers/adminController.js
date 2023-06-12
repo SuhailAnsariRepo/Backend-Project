@@ -19,8 +19,7 @@ const all_admins = async (req, res) => {
 const get_admin = async (req, res) => {
   console.log("inside get admin")
     try {
-        console.log(req.params.email);
-        const admin = await Admin.find({email:req.params.email})
+        const admin = await Admin.find({u_id:req.params.u_id})
         // const admin = await Admin.findById(req.params.admin_id);
         console.log(admin);
         res.json(admin);
@@ -33,7 +32,7 @@ const sign_up = async (req, res) => {
   try {
     // Get user input
     
-    const { name,  password, mobile, email} = req.body;
+    const { name,  password, mobile, email, u_id} = req.body;
 
     // Validate user input
     if (!(name && password && mobile&& email)) {
@@ -42,7 +41,7 @@ const sign_up = async (req, res) => {
 
     // check if user already exist
     // Validate if user exist in our database
-    const existingUser = await Admin.findOne({ email: email });
+    const existingUser = await Admin.findOne({ u_id: u_id });
 
     if (existingUser) {
       return res.status(409).json({message: "Admin Already Exist. Please Login"});
@@ -61,7 +60,7 @@ const sign_up = async (req, res) => {
 
     // Create token
     const token = jwt.sign(
-      { email : user.email, id : user._id },
+      { u_id : user.u_id, id : user._id },
       process.env.TOKEN_KEY,
     );
     // save user token
@@ -80,7 +79,7 @@ const login = async (req, res) => {
   // Our login logic starts here
   try {
     // Get user input
-    const { email, password } = req.body;
+    const { email, password, u_id } = req.body;
 
     // Validate user input
     if (!(email && password)) {
@@ -88,7 +87,7 @@ const login = async (req, res) => {
     }
 
     // Validate if user exist in our database
-    const existingUser = await Admin.findOne({ email: email });
+    const existingUser = await Admin.findOne({ u_id: u_id });
 
     if (!existingUser) {
       return res.status(409).json({message: "User not found. Please Sign up"});
@@ -98,7 +97,7 @@ const login = async (req, res) => {
       // Create token
     if(matchPassword){
       const token = jwt.sign(
-        { email: existingUser.email, id : existingUser._id },
+        { u_id: existingUser.u_id, id : existingUser._id },
         process.env.TOKEN_KEY,
       );
 
@@ -128,7 +127,11 @@ const add_admin = async (req, res) => {
         password: req.body.password,
         mobile: req.body.mobile,
         status: req.body.status,
-        access: req.body.access
+        company: req.body.company,
+        access: req.body.access,
+        money: req.body.money,
+        role: req.body.role,
+        kyc: req.body.kyc,
       });
     
       try {
@@ -142,7 +145,7 @@ const add_admin = async (req, res) => {
 //Delete Admin
 const delete_admin = async (req, res) => {
     try {
-        const removeAdmin = await Admin.deleteOne({email: req.params.email});
+        const removeAdmin = await Admin.deleteOne({u_id: req.params.u_id});
         res.json(removeAdmin);
       } catch (error) {
         res.json({ message: error });
@@ -158,13 +161,17 @@ const update_admin = async (req, res) => {
             password: req.body.password,
             mobile: req.body.mobile,
             status: req.body.status,
-            access: req.body.access
+            company: req.body.company,
+            access: req.body.access,
+            money: req.body.money,
+            role: req.body.role,
+            kyc: req.body.kyc,
         };
 
         console.log(admin);
     
         const updatedAdmin = await Admin.findOneAndUpdate(
-          { email: req.params.email },
+          { u_id: req.params.u_id },
           admin
         );
         res.json(updatedAdmin);

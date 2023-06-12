@@ -46,7 +46,10 @@ const add_opinion = async (req, res) => {
       rules: req.body.rules,
       min_price: req.body.min_price,
       max_price: req.body.max_price,
-      opinion_type: req.body.opinion_type
+      opinion_type: req.body.opinion_type,
+      final_result: req.body.final_result,
+      platform_owner_response : req.body.platform_owner_response,
+      trade_volume: req.body.trade_volume
       });
     
       try {
@@ -83,7 +86,10 @@ const update_opinion = async (req, res) => {
             rules: req.body.rules,
             min_price: req.body.min_price,
             max_price: req.body.max_price,
-            opinion_type: req.body.opinion_type
+            opinion_type: req.body.opinion_type,
+            final_result: req.body.final_result,
+            platform_owner_response : req.body.platform_owner_response,
+            trade_volume: req.body.trade_volume
         };
         console.log(opinion);
     

@@ -20,6 +20,9 @@ const OpinionSchema = new mongoose.Schema({
   min_price: { type: Number },
   max_price: { type: Number },
   opinion_type: { type: String },
+  final_result: { type: String },
+  platform_owner_response : { type: String },
+  trade_volume: { type: Number },
 });
 
 OpinionSchema.pre('save', function (next) {
