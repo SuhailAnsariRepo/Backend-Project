@@ -65,7 +65,7 @@ const sign_up = async (req, res) => {
       process.env.TOKEN_KEY,
     );
     // save user token
-
+    res.cookie('jwtToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true }); // maxAge: 2 hours
     // return new user
     res.status(201).json({ user : user, token: token});
   } catch (err) {
@@ -102,7 +102,7 @@ const login = async (req, res) => {
         process.env.TOKEN_KEY,
       );
 
-      res.cookie("token", token, { maxAge: jwtExpirySeconds * 24*60*60 })
+      res.cookie('jwtToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true }); // maxAge: 2 hours
 
       // save user token
       res.status(201).json({ user : existingUser, token: token});
