@@ -7,7 +7,7 @@ dotenv.config();
 //Get All Admins
 const all_admins = async (req, res) => {
     try {
-        const admins = await Admin.find();
+        const admins = await Admin.find({role:req.params.role});
         console.log(admins);
         res.json(admins);
       } catch (error) {
@@ -19,7 +19,7 @@ const all_admins = async (req, res) => {
 const get_admin = async (req, res) => {
   console.log("inside get admin")
     try {
-        const admin = await Admin.find({u_id:req.params.u_id})
+        const admin = await Admin.find({mobile:req.params.mobile})
         // const admin = await Admin.findById(req.params.admin_id);
         console.log(admin);
         res.json(admin);
@@ -32,7 +32,7 @@ const sign_up = async (req, res) => {
   try {
     // Get user input
     
-    const { name,  password, mobile, email, u_id} = req.body;
+    const { name,  password, mobile, email, u_id, role, company} = req.body;
 
     // Validate user input
     if (!(name && password && mobile&& email)) {
@@ -41,7 +41,7 @@ const sign_up = async (req, res) => {
 
     // check if user already exist
     // Validate if user exist in our database
-    const existingUser = await Admin.findOne({ u_id: u_id });
+    const existingUser = await Admin.findOne({ mobile: mobile });
 
     if (existingUser) {
       return res.status(409).json({message: "Admin Already Exist. Please Login"});
@@ -55,7 +55,9 @@ const sign_up = async (req, res) => {
       name : name,
       mobile: mobile,
       email: email.toLowerCase(), // sanitize: convert email to lowercase
-      password: hashedString
+      password: hashedString,
+      role: role,
+      company: company
     });
 
     // Create token
@@ -79,15 +81,15 @@ const login = async (req, res) => {
   // Our login logic starts here
   try {
     // Get user input
-    const { email, password, u_id } = req.body;
+    const { mobile, password, u_id } = req.body;
 
     // Validate user input
-    if (!(email && password)) {
+    if (!(mobile && password)) {
       res.status(400).send("All input is required");
     }
 
     // Validate if user exist in our database
-    const existingUser = await Admin.findOne({ u_id: u_id });
+    const existingUser = await Admin.findOne({ mobile: mobile });
 
     if (!existingUser) {
       return res.status(409).json({message: "User not found. Please Sign up"});
