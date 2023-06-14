@@ -32,7 +32,7 @@ const sign_up = async (req, res) => {
   try {
     // Get user input
     
-    const { name,  password, mobile, email, u_id, role, company} = req.body;
+    const { name,  password, mobile, email, role, company} = req.body;
 
     // Validate user input
     if (!(name && password && mobile&& email)) {
@@ -62,7 +62,7 @@ const sign_up = async (req, res) => {
 
     // Create token
     const token = jwt.sign(
-      { u_id : user.u_id, id : user._id },
+      { mobile : user.mobile, id : user._id },
       process.env.TOKEN_KEY,
     );
     // save user token
@@ -99,7 +99,7 @@ const login = async (req, res) => {
       // Create token
     if(matchPassword){
       const token = jwt.sign(
-        { u_id: existingUser.u_id, id : existingUser._id },
+        { mobile: existingUser.mobile, id : existingUser._id },
         process.env.TOKEN_KEY,
       );
 
