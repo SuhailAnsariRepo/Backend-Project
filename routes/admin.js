@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const adminController = require('../controllers/adminController')
 
-router.put("/update/:mobile", adminController.update_admin);
+router.patch("/update/:mobile", adminController.update_admin);
 router.get("/:role", adminController.all_admins);
 router.get("/:mobile", adminController.get_admin);
 router.post("/", adminController.add_admin);

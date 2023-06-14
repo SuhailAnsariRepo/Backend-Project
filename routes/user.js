@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const userController = require('../controllers/userController')
 
-router.put("/update/:mobile", userController.update_user);
+router.patch("/update/:mobile", userController.update_user);
 router.get("/", userController.all_users);
 router.get("/:mobile", userController.get_user);
 router.post("/", userController.add_user);
