@@ -17,6 +17,7 @@ const UserSchema = new mongoose.Schema({
   portfolio: { type: Number },
   status: { type: String },
   kyc: { type: String },
+  community: { type: String }
 });
 
 

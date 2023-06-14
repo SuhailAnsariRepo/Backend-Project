@@ -41,6 +41,7 @@ const add_user = async (req, res) => {
         portfolio: req.body.portfolio,
         status: req.body.status,
         kyc: req.body.kyc,
+        community: req.body.community
       });
     
       try {
@@ -73,6 +74,7 @@ const update_user = async (req, res) => {
           portfolio: req.body.portfolio,
           status: req.body.status,
           kyc: req.body.kyc,
+          community: req.body.community
         };
 
         console.log(user);
@@ -91,7 +93,7 @@ const sign_up = async (req, res) => {
   try {
     // Get user input
     
-    const { name,  password, mobile} = req.body;
+    const { name,  password, mobile, community} = req.body;
 
     // Validate user input
     if (!(name && password && mobile)) {
@@ -114,6 +116,7 @@ const sign_up = async (req, res) => {
       name : name,
       mobile: mobile,
       // email: email.toLowerCase(), // sanitize: convert email to lowercase
+      community: community,
       password: hashedString,
     });
 

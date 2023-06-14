@@ -50,8 +50,8 @@ const add_opinion = async (req, res) => {
       final_result: req.body.final_result,
       platform_owner_response : req.body.platform_owner_response,
       trade_volume: req.body.trade_volume,
-      user_type: req.body.user_type,
-      Approved: req.body.Approved
+      role: req.body.role,
+      details: req.body.details
       });
     
       try {
@@ -98,8 +98,8 @@ const update_opinion = async (req, res) => {
             final_result: req.body.final_result,
             platform_owner_response : req.body.platform_owner_response,
             trade_volume: req.body.trade_volume,
-            user_type: req.body.user_type,
-            Approved: req.body.Approved
+            role: req.body.role,
+            details: req.body.details
         };
         console.log(opinion);
     
