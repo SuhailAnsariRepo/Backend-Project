@@ -11,6 +11,7 @@ const UserSchema = new mongoose.Schema({
   user_id: { type: Number, unique: true },
   name: { type: String },
   mobile: { type: Number, unique: true },
+  password: { type: String },
   revenue: { type: Number },
   wallet: { type: Number },
   portfolio: { type: Number },

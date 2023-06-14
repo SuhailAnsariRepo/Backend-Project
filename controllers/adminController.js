@@ -68,10 +68,10 @@ const sign_up = async (req, res) => {
     // save user token
     res.cookie('jwtToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true }); // maxAge: 2 hours
     // return new user
-    res.status(201).json({ user : user, token: token});
+    return res.status(201).json({ user : user, token: token});
   } catch (err) {
     console.log(err);
-    res.status(500).json({message: "Something went wrong"});
+    return res.status(500).json({message: "Something went wrong"});
   }
   // Our register logic ends here
 };
