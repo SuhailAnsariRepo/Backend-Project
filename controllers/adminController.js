@@ -81,7 +81,7 @@ const login = async (req, res) => {
   // Our login logic starts here
   try {
     // Get user input
-    const { mobile, password, u_id } = req.body;
+    const { mobile, password } = req.body;
 
     // Validate user input
     if (!(mobile && password)) {
@@ -106,16 +106,16 @@ const login = async (req, res) => {
       res.cookie('jwtToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true }); // maxAge: 2 hours
 
       // save user token
-      res.status(201).json({ user : existingUser, token: token});
+      return res.status(201).json({ user : existingUser, token: token});
 
 
       // user
       // res.status(200).json(user);
     }
-    res.status(400).json({message: "Invalid Credentials"});
+    return res.status(400).json({message: "Invalid Credentials"});
   } catch (err) {
     console.log(err);
-    res.status(500).json({message: "Something went wrong"});
+    return res.status(500).json({message: "Something went wrong"});
   }
   // Our register logic ends here
 };
