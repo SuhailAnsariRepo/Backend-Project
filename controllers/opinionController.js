@@ -112,7 +112,6 @@ const update_opinion = async (req, res) => {
         res.json({ message: error });
       }
     }else{
-      res.json({message:"This Opinion has closed"});
       const opinion = {
         status: "Closed",
       };
@@ -121,7 +120,7 @@ const update_opinion = async (req, res) => {
         { opinion_id: req.params.opinion_id },
         opinion
       );
-      res.json({ message: "Opinion updated sucessfully" });
+      res.json({message:"This Opinion has closed"});
     }
 };
 
