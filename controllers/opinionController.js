@@ -76,7 +76,13 @@ const delete_opinion = async (req, res) => {
 
 //Update Opinion
 const update_opinion = async (req, res) => {
-    try {
+    const currentDateTime = new Date().toISOString()
+    const date1 = new Date(currentDateTime);
+    const date2 = new Date(req.body.end_date);
+    // Calculate the difference in milliseconds
+    const difference = (date2 - date1);
+    if(difference>0){
+      try {
         const opinion = {
             title: req.body.title,
             description: req.body.description,
@@ -105,6 +111,18 @@ const update_opinion = async (req, res) => {
       } catch (error) {
         res.json({ message: error });
       }
+    }else{
+      res.json({message:"This Opinion has closed"});
+      const opinion = {
+        status: "Closed",
+      };
+      console.log(opinion);
+      const updatedopinion = await Opinion.findOneAndUpdate(
+        { opinion_id: req.params.opinion_id },
+        opinion
+      );
+      res.json({ message: "Opinion updated sucessfully" });
+    }
 };
 
 module.exports = {
