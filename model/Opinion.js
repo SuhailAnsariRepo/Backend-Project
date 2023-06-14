@@ -23,6 +23,8 @@ const OpinionSchema = new mongoose.Schema({
   final_result: { type: String },
   platform_owner_response : { type: String },
   trade_volume: { type: Number },
+  user_type: {type : String},
+  Approved: {type: Boolean}
 });
 
 OpinionSchema.pre('save', function (next) {

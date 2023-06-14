@@ -49,7 +49,9 @@ const add_opinion = async (req, res) => {
       opinion_type: req.body.opinion_type,
       final_result: req.body.final_result,
       platform_owner_response : req.body.platform_owner_response,
-      trade_volume: req.body.trade_volume
+      trade_volume: req.body.trade_volume,
+      user_type: req.body.user_type,
+      Approved: req.body.Approved
       });
     
       try {
@@ -89,7 +91,9 @@ const update_opinion = async (req, res) => {
             opinion_type: req.body.opinion_type,
             final_result: req.body.final_result,
             platform_owner_response : req.body.platform_owner_response,
-            trade_volume: req.body.trade_volume
+            trade_volume: req.body.trade_volume,
+            user_type: req.body.user_type,
+            Approved: req.body.Approved
         };
         console.log(opinion);
     
