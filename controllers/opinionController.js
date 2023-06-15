@@ -2,13 +2,44 @@ const Opinion = require("../model/Opinion");
 let opinionLength = 0;
 //Get All Opinions
 const all_opinions = async (req, res) => {
-    try {
-        const opinions = await Opinion.find();
-        res.json(opinions);
-      } catch (error) {
-        res.json({ message: error });
-      }
+  try {
+    const { search, status, opinion_type, role, final_result } = req.query;
+
+    // Build the filter object based on query parameters
+    const filter = {};
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { news: { $regex: search, $options: 'i' } }
+      ];
+    }
+    if (status) {
+      filter.status = status;
+    }
+    if (opinion_type) {
+      filter.opinion_type = opinion_type;
+    }
+    if (role){
+      filter.role = role;
+    }
+    if (final_result){
+      final_result.role = final_result;
+    }
+
+    const opinions = await Opinion.find(filter);
+    res.json(opinions);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching opinions' });
+  }
 };
+//     try {
+//         const opinions = await Opinion.find();
+//         res.json(opinions);
+//       } catch (error) {
+//         res.json({ message: error });
+//       }
+// };
 
 //Get Single Opinion
 const get_opinion = async (req, res) => {
@@ -76,11 +107,17 @@ const delete_opinion = async (req, res) => {
 
 //Update Opinion
 const update_opinion = async (req, res) => {
+
+    const opinion = await Opinion.find({ opinion_id: req.params.opinion_id })
     const currentDateTime = new Date().toISOString()
+    console.log(opinion)
     const date1 = new Date(currentDateTime);
-    const date2 = new Date(req.body.end_date);
+    const date2 = (opinion.end_date);
+    console.log(date1);
+    console.log(date2);
     // Calculate the difference in milliseconds
     const difference = (date2 - date1);
+    console.log(difference);
     if(difference>0){
       try {
         const opinion = {
