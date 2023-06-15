@@ -19,7 +19,8 @@ const all_admins = async (req, res) => {
 const get_admin = async (req, res) => {
   console.log("inside get admin")
     try {
-        const admin = await Admin.find({mobile:req.params.mobile})
+        console.log(req.params.mobile);
+        const admin = await Admin.findOne({mobile:req.params.mobile})
         // const admin = await Admin.findById(req.params.admin_id);
         console.log(admin);
         res.json(admin);
