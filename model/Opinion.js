@@ -25,7 +25,7 @@ const OpinionSchema = new mongoose.Schema({
   trade_volume: { type: Number },
   role : {type : String },
   details: {
-    createdBy : {type : String },
+    createdBy : {type : Number },
     time: { type: Date }
   }
 });
