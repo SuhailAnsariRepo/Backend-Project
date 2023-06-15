@@ -24,7 +24,7 @@ const all_opinions = async (req, res) => {
       filter.role = role;
     }
     if (final_result){
-      final_result.role = final_result;
+      filter.final_result = final_result;
     }
 
     const opinions = await Opinion.find(filter);
@@ -107,19 +107,18 @@ const delete_opinion = async (req, res) => {
 
 //Update Opinion
 const update_opinion = async (req, res) => {
-
-    const opinion = await Opinion.find({ opinion_id: req.params.opinion_id })
-    const currentDateTime = new Date().toISOString()
-    console.log(opinion)
-    const date1 = new Date(currentDateTime);
-    const date2 = (opinion.end_date);
-    console.log(date1);
-    console.log(date2);
-    // Calculate the difference in milliseconds
-    const difference = (date2 - date1);
-    console.log(difference);
-    if(difference>0){
       try {
+        const opinion = await Opinion.find({ opinion_id: req.params.opinion_id })
+      const currentDateTime = new Date().toISOString()
+      console.log(opinion)
+      const date1 = new Date(currentDateTime);
+      const date2 = opinion[0].end_date;
+      console.log(date1);
+      console.log(date2);
+      // Calculate the difference in milliseconds
+      const difference = (date2 - date1);
+      console.log(difference);
+      if(difference>0){
         const opinion = {
             title: req.body.title,
             description: req.body.description,
@@ -145,20 +144,20 @@ const update_opinion = async (req, res) => {
           opinion
         );
         res.json({ message: "Opinion updated sucessfully" });
+      }else{
+          const opinion = {
+            status: "Closed",
+          };
+          console.log(opinion);
+          const updatedopinion = await Opinion.findOneAndUpdate(
+            { opinion_id: req.params.opinion_id },
+            opinion
+          );
+          res.json({message:"This Opinion has closed"});
+        }
       } catch (error) {
         res.json({ message: error });
       }
-    }else{
-      const opinion = {
-        status: "Closed",
-      };
-      console.log(opinion);
-      const updatedopinion = await Opinion.findOneAndUpdate(
-        { opinion_id: req.params.opinion_id },
-        opinion
-      );
-      res.json({message:"This Opinion has closed"});
-    }
 };
 
 module.exports = {
