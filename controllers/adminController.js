@@ -17,16 +17,35 @@ const all_admins = async (req, res) => {
 
 //Get Single Admin
 const get_admin = async (req, res) => {
-  console.log("inside get admin")
-    try {
-        console.log(req.params.mobile);
-        const admin = await Admin.findOne({mobile:req.params.mobile})
-        // const admin = await Admin.findById(req.params.admin_id);
-        console.log(admin);
-        res.json(admin);
-      } catch (error) {
-        res.json({ message: error });
-      }
+  try {
+    const { status, role, mobile, company, access, kyc} = req.query;
+
+    // Build the filter object based on query parameters
+    const filter = {};
+    if (status) {
+      filter.status = status;
+    }
+    if (role) {
+      filter.role = role;
+    }
+    if (mobile) {
+      filter.mobile = mobile;
+    }
+    if (company) {
+      filter.company = company;
+    }
+    if (access) {
+      filter.access = access;
+    }
+    if (kyc) {
+      filter.kyc = kyc;
+    }
+
+    const admins = await Admin.find(filter);
+    res.json(admins);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching admins' });
+  }
 };
 
 const sign_up = async (req, res) => {
