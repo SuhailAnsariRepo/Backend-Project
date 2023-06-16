@@ -33,7 +33,7 @@ const sign_up = async (req, res) => {
   try {
     // Get user input
     
-    const { name,  password, mobile, email, role, company} = req.body;
+    const { name,  password, mobile, email, role, company, status} = req.body;
 
     // Validate user input
     if (!(name && password && mobile&& email)) {
@@ -58,7 +58,8 @@ const sign_up = async (req, res) => {
       email: email.toLowerCase(), // sanitize: convert email to lowercase
       password: hashedString,
       role: role,
-      company: company
+      company: company,
+      status: status
     });
 
     // Create token
