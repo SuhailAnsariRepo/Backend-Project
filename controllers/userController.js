@@ -6,13 +6,32 @@ dotenv.config();
 
 //Get All Users
 const all_users = async (req, res) => {
-    try {
-        const users = await User.find();
-        console.log(users);
-        res.json(users);
-      } catch (error) {
-        res.json({ message: error });
-      }
+  try {
+    const { name, mobile, status, community, kyc } = req.query;
+
+    // Build the filter object based on query parameters
+    const filter = {};
+    if (name) {
+      filter.name = name;
+    }
+    if (mobile) {
+      filter.mobile = mobile;
+    }
+    if (status) {
+      filter.status = status;
+    }
+    if (community) {
+      filter.community = community;
+    }
+    if (kyc) {
+      filter.kyc = kyc;
+    }
+
+    const users = await User.find(filter);
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching users' });
+  }
 };
 
 //Get Single User
