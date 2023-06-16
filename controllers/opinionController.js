@@ -3,7 +3,7 @@ let opinionLength = 0;
 //Get All Opinions
 const all_opinions = async (req, res) => {
   try {
-    const { search, status, opinion_type, role, final_result } = req.query;
+    const { search, status, opinion_type, role, final_result, createdBy } = req.query;
 
     // Build the filter object based on query parameters
     const filter = {};
@@ -26,6 +26,9 @@ const all_opinions = async (req, res) => {
     if (final_result){
       filter.final_result = final_result;
     }
+    if (createdBy) {
+      filter['details.createdBy'] = createdBy;
+    }
 
     const opinions = await Opinion.find(filter);
     res.json(opinions);
@@ -33,6 +36,7 @@ const all_opinions = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching opinions' });
   }
 };
+
 //     try {
 //         const opinions = await Opinion.find();
 //         res.json(opinions);
