@@ -147,7 +147,7 @@ const update_opinion = async (req, res) => {
           { opinion_id: req.params.opinion_id },
           opinion
         );
-        res.json({ message: "Opinion updated sucessfully" });
+        res.json(opinion);
       }else{
           const opinion = {
             status: "Closed",

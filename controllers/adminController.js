@@ -197,7 +197,7 @@ const update_admin = async (req, res) => {
           { mobile: req.params.mobile },
           admin
         );
-        res.json(updatedAdmin);
+        res.json(admin);
       } catch (error) {
         res.json({ message: error });
       }

@@ -102,7 +102,7 @@ const update_user = async (req, res) => {
           { mobile: req.params.mobile },
           user
         );
-        res.json(updateduser);
+        res.json(user);
       } catch (error) {
         res.json({ message: error });
       }
