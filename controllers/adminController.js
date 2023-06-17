@@ -168,7 +168,7 @@ const add_admin = async (req, res) => {
 //Delete Admin
 const delete_admin = async (req, res) => {
     try {
-        const removeAdmin = await Admin.deleteOne({u_id: req.params.u_id});
+        const removeAdmin = await Admin.deleteOne({mobile: req.params.mobile});
         res.json(removeAdmin);
       } catch (error) {
         res.json({ message: error });
@@ -194,7 +194,7 @@ const update_admin = async (req, res) => {
         console.log(admin);
     
         const updatedAdmin = await Admin.findOneAndUpdate(
-          { u_id: req.params.u_id },
+          { mobile: req.params.mobile },
           admin
         );
         res.json(updatedAdmin);
