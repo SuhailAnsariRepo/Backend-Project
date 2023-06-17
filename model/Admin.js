@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const CounterSchema = new mongoose.Schema({
     _id: { type: String, required: true },
     sequence_value: { type: Number, default: 1 }
@@ -63,11 +63,11 @@ adminSchema.pre('save', function (next) {
       });
   });
 
-// adminSchema.pre('save', async function(){
-//     let salt = await bcrypt.genSalt();
-//     let hashedString = await bcrypt.hash(this.password, salt);
-//     this.password=hashedString;
-//     console.log(this.password);
-// });
+adminSchema.pre('save', async function(){
+    let salt = await bcrypt.genSalt();
+    let hashedString = await bcrypt.hash(this.password, salt);
+    this.password=hashedString;
+    console.log(this.password);
+});
 const Admin = mongoose.model("Admin", adminSchema);
 module.exports = Admin;
