@@ -150,7 +150,7 @@ const update_opinion = async (req, res) => {
         res.json(opinion);
       }else{
           const opinion = {
-            status: "Closed",
+            status: "Stopped",
           };
           console.log(opinion);
           const updatedopinion = await Opinion.findOneAndUpdate(
