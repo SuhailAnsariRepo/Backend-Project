@@ -11,6 +11,7 @@ const OpinionSchema = new mongoose.Schema({
   opinion_id: { type: Number, unique: true },
   title: { type: String },
   description: { type: String },
+  guidelines: { type: String }, 
   start_date: { type: Date },
   end_date: { type: Date },  
   news: { type: String },

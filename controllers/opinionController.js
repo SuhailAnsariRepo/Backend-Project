@@ -73,6 +73,7 @@ const add_opinion = async (req, res) => {
   const opinion = new Opinion({
       title: req.body.title,
       description: req.body.description,
+      guidelines: req.body.guidelines,
       start_date: req.body.start_date,
       end_date: req.body.end_date,
       news: req.body.news,
@@ -126,6 +127,7 @@ const update_opinion = async (req, res) => {
         const opinion = {
             title: req.body.title,
             description: req.body.description,
+            guidelines: req.body.guidelines,
             start_date: req.body.start_date,
             end_date: req.body.end_date,
             news: req.body.news,
