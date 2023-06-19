@@ -203,6 +203,100 @@ const update_admin = async (req, res) => {
       }
 };
 
+const forget = async (req, res) => {
+  const { email } = req.body.email;
+  console.log(email);
+  try {
+    const oldUser = await Admin.findOne({ email: email });
+    if (!oldUser) {
+      return res.json({ status: "User Not Exists!!" });
+    }
+    const secret = process.env.TOKEN_KEY + oldUser.password;
+    const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
+      expiresIn: "5m",
+    });
+    const link = `http://localhost:3030/api/admins/reset-password/${oldUser._id}/${token}`;
+
+    console.log("Suhail")
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "suhafea@gmail.com",
+        pass: "ayjkigznxzegmbij",
+      },
+    });
+
+    var mailOptions = {
+      from: "suhafea@gmail.com",
+      to: email,
+      subject: "Password Reset",
+      text: link,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+    console.log(link);
+  } catch (error) { 
+    console.log(error);
+  }
+};
+
+const getToken = async  (req, res) => {
+  const { id, token } = req.params;
+  console.log(req.params);
+  const oldUser = await Admin.findOne({ _id: id });
+  if (!oldUser) {
+    return res.json({ status: "User Not Exists!!" });
+  }
+  const secret = process.env.TOKEN_KEY + oldUser.password;
+  try {
+    const verify = jwt.verify(token, secret);
+    res.send("Verified")
+    // res.render("index", { email: verify.email, status: "Not Verified" });
+  } catch (error) {
+    console.log(error);
+    res.send("Not Verified");
+  }
+};
+
+const postToken =  async (req, res) => {
+  const { id, token } = req.params;
+  const { password } = req.body;
+
+  const oldUser = await Admin.findOne({ _id: id });
+  if (!oldUser) {
+    return res.json({ status: "User Not Exists!!" });
+  }
+  const secret = TOKEN_KEY + oldUser.password;
+  try {
+    const verify = jwt.verify(token, secret);
+    let salt = await bcrypt.genSalt();
+    const encryptedPassword = await bcrypt.hash(password, salt);
+    await Admin.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          password: encryptedPassword,
+        },
+      }
+    );
+
+    res.send("Password is changed")
+
+    // res.render("index", { email: verify.email, status: "verified" });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "Something Went Wrong" });
+  }
+};
+
 module.exports = {
     all_admins,
     get_admin,
@@ -210,5 +304,8 @@ module.exports = {
     delete_admin,
     update_admin,
     login,
-    sign_up
+    sign_up,
+    forget,
+    getToken,
+    postToken
 }
