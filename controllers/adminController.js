@@ -2,6 +2,7 @@ const Admin = require("../model/Admin");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dotenv = require("dotenv");
+const nodemailer = require("nodemailer");
 dotenv.config();
 
 //Get All Admins
@@ -204,7 +205,7 @@ const update_admin = async (req, res) => {
 };
 
 const forget = async (req, res) => {
-  const { email } = req.body.email;
+  const { email } = req.body;
   console.log(email);
   try {
     const oldUser = await Admin.findOne({ email: email });
@@ -238,6 +239,7 @@ const forget = async (req, res) => {
         console.log(error);
       } else {
         console.log("Email sent: " + info.response);
+        res.send(info.response);
       }
     });
     console.log(link);
