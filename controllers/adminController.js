@@ -274,7 +274,7 @@ const postToken =  async (req, res) => {
   if (!oldUser) {
     return res.json({ status: "User Not Exists!!" });
   }
-  const secret = TOKEN_KEY + oldUser.password;
+  const secret = process.env.TOKEN_KEY + oldUser.password;
   try {
     const verify = jwt.verify(token, secret);
     let salt = await bcrypt.genSalt();
