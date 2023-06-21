@@ -242,7 +242,7 @@ const forget = async (req, res) => {
     }
     const secret = process.env.TOKEN_KEY + oldUser.password;
     const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
-      expiresIn: "5m",
+      expiresIn: "15m",
     });
     const link = `http://localhost:3030/api/admins/reset-password/${oldUser._id}/${token}`;
 
@@ -259,7 +259,7 @@ const forget = async (req, res) => {
       from: "suhailansari@birthvenue.co",
       to: email,
       subject: "Password Reset",
-      text: link,
+      text: `You can reset your password by clicking the link down below. It'll expire automatically in 15 minutes\n\n` +link,
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
