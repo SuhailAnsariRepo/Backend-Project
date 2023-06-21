@@ -14,13 +14,15 @@ const UserSchema = new mongoose.Schema({
   otp: {type: Number, trim: true},
   referral: {
     referralCode:{
-      type: String
+      type: String,
+      unique: true
     },
     referredBy:{
       type: Number
     },
     referralCount:{
-      type:Number
+      type:Number,
+      default: 0
     }
   }
 });

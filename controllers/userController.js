@@ -7,7 +7,7 @@ dotenv.config();
 //Get All Users
 const all_users = async (req, res) => {
   try {
-    const { name, mobile, status, community, kyc } = req.query;
+    const { name, mobile, status, community, kyc, referral } = req.query;
 
     // Build the filter object based on query parameters
     const filter = {};
@@ -25,6 +25,10 @@ const all_users = async (req, res) => {
     }
     if (kyc) {
       filter.kyc = kyc;
+    }
+    if (referral) {
+      filter['referral.referredBy'] = referredBy;
+      filter['referral.referralCount'] = referralCount;
     }
 
     const users = await User.find(filter);
@@ -111,8 +115,7 @@ const update_user = async (req, res) => {
 const sign_up = async (req, res, next) => {
   try {
     // Get user input
-    
-    const { name, mobile, community} = req.body;
+    const { name, mobile, community, referralCode } = req.body;
 
     // Validate user input
     if (!(name && mobile)) {
@@ -124,25 +127,33 @@ const sign_up = async (req, res, next) => {
     const existingUser = await User.findOne({ mobile: mobile });
 
     if (existingUser) {
-      return res.status(409).json({message: "Admin Already Exist. Please Login"});
+      return res.status(409).json({ message: "Admin Already Exist. Please Login" });
     }
-    
+
     // Create user in our database
-    const user = await User.create({
-      name : name,
-      mobile: mobile,
-      community: community,
-    });
-    
-    res.status(201).json({ user : user});
+    const userData = { name, mobile, community };
+    if (referralCode) {
+      const referrer = await User.findOne({ 'referral.referralCode': referralCode });
+      if (referrer) {
+        userData.referral = { referredBy: referrer.mobile };
+        await User.updateOne(
+          { user_id: referrer.user_id },
+          { $inc: { 'referral.referralCount': 1 } }
+        );
+      }
+    }    
+    const user = await User.create(userData);
+
+    res.status(201).json({ user: user });
 
     next();
   } catch (err) {
     console.log(err);
-    return res.status(500).json({message: "Something went wrong"});
+    return res.status(500).json({ message: "Something went wrong" });
   }
   // Our register logic ends here
 };
+
 
 const generateOTP = async (req, res, next) => {
   try {
