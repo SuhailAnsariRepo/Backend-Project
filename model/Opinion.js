@@ -11,13 +11,15 @@ const OpinionSchema = new mongoose.Schema({
   opinion_id: { type: Number, unique: true },
   title: { type: String },
   description: { type: String },
-  guidelines: { type: String }, 
   start_date: { type: Date },
   end_date: { type: Date },  
   news: { type: String },
   status: { type: String },
   source_of_truth: { type: String },
-  rules: { type: String },
+  conditions: {
+    rules: { type: String },     
+    guidelines: { type: String }
+  },
   min_price: { type: Number },
   max_price: { type: Number },
   opinion_type: { type: String },

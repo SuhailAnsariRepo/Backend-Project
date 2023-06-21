@@ -73,13 +73,12 @@ const add_opinion = async (req, res) => {
   const opinion = new Opinion({
       title: req.body.title,
       description: req.body.description,
-      guidelines: req.body.guidelines,
       start_date: req.body.start_date,
       end_date: req.body.end_date,
       news: req.body.news,
       status: req.body.status,
       source_of_truth: req.body.source_of_truth,
-      rules: req.body.rules,
+      conditions: req.body.conditions,
       min_price: req.body.min_price,
       max_price: req.body.max_price,
       opinion_type: req.body.opinion_type,
@@ -125,23 +124,22 @@ const update_opinion = async (req, res) => {
       console.log(difference);
       if(difference>0){
         const opinion = {
-            title: req.body.title,
-            description: req.body.description,
-            guidelines: req.body.guidelines,
-            start_date: req.body.start_date,
-            end_date: req.body.end_date,
-            news: req.body.news,
-            status: req.body.status,
-            source_of_truth: req.body.source_of_truth,
-            rules: req.body.rules,
-            min_price: req.body.min_price,
-            max_price: req.body.max_price,
-            opinion_type: req.body.opinion_type,
-            final_result: req.body.final_result,
-            platform_owner_response : req.body.platform_owner_response,
-            trade_volume: req.body.trade_volume,
-            role: req.body.role,
-            details: req.body.details
+          title: req.body.title,
+          description: req.body.description,
+          start_date: req.body.start_date,
+          end_date: req.body.end_date,
+          news: req.body.news,
+          status: req.body.status,
+          source_of_truth: req.body.source_of_truth,
+          conditions: req.body.conditions,
+          min_price: req.body.min_price,
+          max_price: req.body.max_price,
+          opinion_type: req.body.opinion_type,
+          final_result: req.body.final_result,
+          platform_owner_response : req.body.platform_owner_response,
+          trade_volume: req.body.trade_volume,
+          role: req.body.role,
+          details: req.body.details
         };
         console.log(opinion);
     
