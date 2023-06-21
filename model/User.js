@@ -1,25 +1,43 @@
 const mongoose = require('mongoose');
 
-// const CounterSchema = new mongoose.Schema({
-//   _id: { type: String, required: true },
-//   sequence_value: { type: Number, default: 1 }
-// });
-
-// const Counter = mongoose.model('Counter', CounterSchema);
-
 const UserSchema = new mongoose.Schema({
   user_id: { type: Number, unique: true },
   name: { type: String },
-  mobile: { type: Number, unique: true },
+  mobile: { type: Number, required: true, trim: true, unique: true},
   password: { type: String },
   revenue: { type: Number },
   wallet: { type: Number },
   portfolio: { type: Number },
   status: { type: String },
   kyc: { type: String },
-  community: { type: String }
+  community: { type: String },
+  otp: {type: Number, trim: true},
+  referral: {
+    referralCode:{
+      type: String
+    },
+    referredBy:{
+      type: Number
+    },
+    referralCount:{
+      type:Number
+    }
+  }
 });
 
+
+// Pre-save hook to generate referralCode
+UserSchema.pre('save', function(next) {
+  if (this.isNew && !this.referral.referralCode) {
+    const alphanumeric = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let referralCode = '';
+    for (let i = 0; i < 6; i++) {
+      referralCode += alphanumeric.charAt(Math.floor(Math.random() * alphanumeric.length));
+    }
+    this.referral.referralCode = referralCode;
+  }
+  next();
+});
 
 const User = mongoose.model('User', UserSchema);
 

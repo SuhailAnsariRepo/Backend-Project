@@ -108,14 +108,14 @@ const update_user = async (req, res) => {
       }
 };
 
-const sign_up = async (req, res) => {
+const sign_up = async (req, res, next) => {
   try {
     // Get user input
     
-    const { name,  password, mobile, community} = req.body;
+    const { name, mobile, community} = req.body;
 
     // Validate user input
-    if (!(name && password && mobile)) {
+    if (!(name && mobile)) {
       res.status(400).send("All input is required");
     }
 
@@ -127,27 +127,16 @@ const sign_up = async (req, res) => {
       return res.status(409).json({message: "Admin Already Exist. Please Login"});
     }
     
-    //Encrypt user password
-    let salt = await bcrypt.genSalt();
-    const hashedString = await bcrypt.hash(password, salt);
     // Create user in our database
     const user = await User.create({
       name : name,
       mobile: mobile,
-      // email: email.toLowerCase(), // sanitize: convert email to lowercase
       community: community,
-      password: hashedString,
     });
+    
+    res.status(201).json({ user : user});
 
-    // Create token
-    const token = jwt.sign(
-      { mobile : user.mobile, id : user._id },
-      process.env.TOKEN_KEY,
-    );
-    // save user token
-    res.cookie('jwtToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true }); // maxAge: 2 hours
-    // return new user
-    return res.status(201).json({ user : user, token: token});
+    next();
   } catch (err) {
     console.log(err);
     return res.status(500).json({message: "Something went wrong"});
@@ -155,16 +144,58 @@ const sign_up = async (req, res) => {
   // Our register logic ends here
 };
 
-const login = async (req, res) => {
+const generateOTP = async (req, res, next) => {
+  try {
+    // Get user input
+    const { mobile } = req.body;
 
+    // Validate user input
+    if (!mobile) {
+      return res.status(400).send("Mobile Number is required");
+    }
+
+    // Validate if user exists in our database
+    const existingUser = await User.findOne({ mobile: mobile });
+
+    if (!existingUser) {
+      return res.status(409).json({ message: "User not found. Please Sign up" });
+    }
+
+    let random = Math.floor(Math.random() * 900000) + 10000;
+    existingUser.otp = random;
+    await existingUser.save();
+
+    accountSid = 'ACc5358182ec884510e49dfac5daf8c6cb';
+    authToken = '6f111c8270baef0b07541dd837b2e37c';
+
+    const client = require('twilio')(accountSid, authToken);
+
+    client.messages
+      .create({
+        body: `Your OTP for Earn-X is ${random}.`,
+        from: '+15418738806',
+        to: '+91' + mobile
+      })
+      .then(message => console.log(message.sid))
+      .catch(error => console.error(error));
+
+    res.status(200).json({ message: "OTP generated successfully" });
+    next();
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const verifyOTP = async (req, res, next) => {
   // Our login logic starts here
   try {
     // Get user input
-    const { mobile, password } = req.body;
+    const { mobile, otp } = req.body;
 
     // Validate user input
-    if (!(mobile && password)) {
-      res.status(400).send("All input is required");
+    if (!(mobile)) {
+      res.status(400).send("Mobile Number is required");
     }
 
     // Validate if user exist in our database
@@ -174,23 +205,17 @@ const login = async (req, res) => {
       return res.status(409).json({message: "User not found. Please Sign up"});
     }
 
-    const matchPassword = await bcrypt.compare(password, existingUser.password);
-      // Create token
-    if(matchPassword){
-      const token = jwt.sign(
-        { mobile: existingUser.mobile, id : existingUser._id },
-        process.env.TOKEN_KEY,
-      );
+    if(otp === existingUser.otp){
 
-      res.cookie('jwtToken', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true }); // maxAge: 2 hours
-
-      // save user token
-      return res.status(201).json({ user : existingUser, token: token});
-
-
-      // user
-      // res.status(200).json(user);
+          // Create token
+    const token = jwt.sign(
+      { mobile : existingUser.mobile, id : existingUser._id },
+      process.env.TOKEN_KEY,
+    );
+    // return new user
+    return res.status(201).json({ user : existingUser, token: token});
     }
+
     return res.status(400).json({message: "Invalid Credentials"});
   } catch (err) {
     console.log(err);
@@ -206,5 +231,6 @@ module.exports = {
     delete_user,
     update_user,
     sign_up,
-    login
+    generateOTP,
+    verifyOTP
 }

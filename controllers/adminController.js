@@ -168,15 +168,15 @@ const add_admin = async (req, res) => {
         var transporter = nodemailer.createTransport({
           service: "gmail",
           auth: {
-            user: "suhafea@gmail.com",
-            pass: "ayjkigznxzegmbij",
+            user: "suhailansari@birthvenue.co",
+            pass: "lnjqfvflvmwhxqky",
           },
         });
     
         var mailOptions = {
-          from: "suhail@gmail.com",
+          from: "suhailansari@birthvenue.co",
           to: email,
-          subject: "Profile Created",
+          subject: `Earn-X Profile Created`,
           text: `Congrats, your profile has been created. \nYour email id is ${email} and password is ${password}. \nYou can now use these credentials to sign in at Earn-X`
         };
     
@@ -196,6 +196,7 @@ const add_admin = async (req, res) => {
 //Delete Admin
 const delete_admin = async (req, res) => {
     try {
+        console.log(req.params.mobile);
         const removeAdmin = await Admin.deleteOne({mobile: req.params.mobile});
         res.json(removeAdmin);
       } catch (error) {
@@ -249,13 +250,13 @@ const forget = async (req, res) => {
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "suhafea@gmail.com",
-        pass: "ayjkigznxzegmbij",
+        user: "suhailansari@birthvenue.co",
+        pass: "lnjqfvflvmwhxqky",
       },
     });
 
     var mailOptions = {
-      from: "suhafea@gmail.com",
+      from: "suhailansari@birthvenue.co",
       to: email,
       subject: "Password Reset",
       text: link,

@@ -7,6 +7,7 @@ router.get("/:mobile", userController.get_user);
 router.post("/", userController.add_user);
 router.delete("/:mobile", userController.delete_user);
 router.post("/signup", userController.sign_up);
-router.post("/login", userController.login);
+router.post("/generate", userController.generateOTP);
+router.post("/verify", userController.verifyOTP);
 
 module.exports = router;

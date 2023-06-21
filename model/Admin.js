@@ -25,7 +25,9 @@ const adminSchema = new mongoose.Schema({
         type : String
     },
     mobile:{
-        type : String,
+        type : Number,
+        required: true,
+        trim: true,
         unique: true
     },
     access:{
