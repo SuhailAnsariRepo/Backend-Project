@@ -144,6 +144,9 @@ const login = async (req, res) => {
 
 //Add New Admin
 const add_admin = async (req, res) => {
+  const {email, password} = req.body;
+  console.log(email);
+  console.log(password);
   console.log("inside post")
     const admin = new Admin({
         name: req.body.name,
@@ -161,6 +164,30 @@ const add_admin = async (req, res) => {
       try {
         const savedadmin = await admin.save();
         res.send(savedadmin);
+
+        var transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: "suhafea@gmail.com",
+            pass: "ayjkigznxzegmbij",
+          },
+        });
+    
+        var mailOptions = {
+          from: "suhail@gmail.com",
+          to: email,
+          subject: "Profile Created",
+          text: `Congrats, your profile has been created. \nYour email id is ${email} and password is ${password}. \nYou can now use these credentials to sign in at Earn-X`
+        };
+    
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Email sent: " + info.response);
+            res.send(info.response);
+          }
+        });
       } catch (error) {
         res.status(400).send(error);
       }
