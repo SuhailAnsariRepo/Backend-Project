@@ -135,16 +135,49 @@ const sign_up = async (req, res, next) => {
     if (referralCode) {
       const referrer = await User.findOne({ 'referral.referralCode': referralCode });
       if (referrer) {
-        userData.referral = { referredBy: referrer.mobile };
+        userData.referral = { referredBy: referrer.user_id };
+        const referralChain = [{ level: 1, user_id: referrer.user_id }];
+        if (referrer.referral.referralChain) {
+          for (const ref of referrer.referral.referralChain) {
+            if (ref.level < 4) {
+              referralChain.push({ level: ref.level + 1, user_id: ref.user_id });
+            }
+          }
+        }
+        userData.referral.referralChain = referralChain;
         await User.updateOne(
           { user_id: referrer.user_id },
           { $inc: { 'referral.referralCount': 1 } }
         );
+        for (const ref of referralChain) {
+          await User.updateOne(
+            { user_id: ref.user_id },
+            { $inc: { 'referral.rewardsEarned': getRewardForLevel(ref.level) } }
+          );
+        }
       }
-    }    
+    }
     const user = await User.create(userData);
 
     res.status(201).json({ user: user });
+
+    function getRewardForLevel(level) {
+      // Return the reward amount for the given level
+      // You can customize this function according to your needs
+      switch (level) {
+        case 1:
+          return 40;
+        case 2:
+          return 25;
+        case 3:
+          return 15;
+        case 4:
+          return 10;
+        default:
+          return 0;
+      }
+    }
+
 
     next();
   } catch (err) {
@@ -176,19 +209,27 @@ const generateOTP = async (req, res, next) => {
     existingUser.otp = random;
     await existingUser.save();
 
-    accountSid = 'ACc5358182ec884510e49dfac5daf8c6cb';
-    authToken = '6f111c8270baef0b07541dd837b2e37c';
 
-    const client = require('twilio')(accountSid, authToken);
+    const fast2sms = require('fast-two-sms')
 
-    client.messages
-      .create({
-        body: `Your OTP for Earn-X is ${random}.`,
-        from: '+15418738806',
-        to: '+91' + mobile
-      })
-      .then(message => console.log(message.sid))
-      .catch(error => console.error(error));
+    var options = {authorization : "lwbzF3rIk5WT0E8S2JZf6RmBDnvYxGuVhO4XA1KeNg7QLiMspUyM4R0EbV9jBteOlhC3i6IfHdgnJcYx" , message : 'Hey You there' ,  numbers : [mobile]} 
+    const res2 = await fast2sms.sendMessage(options) //Asynchronous Function.
+
+    console.log(res2);
+
+    // accountSid = 'ACc5358182ec884510e49dfac5daf8c6cb';
+    // authToken = '6f111c8270baef0b07541dd837b2e37c';
+
+    // const client = require('twilio')(accountSid, authToken);
+
+    // client.messages
+    //   .create({
+    //     body: `Your OTP for Earn-X is ${random}.`,
+    //     from: '+15418738806',
+    //     to: '+91' + mobile
+    //   })
+    //   .then(message => console.log(message.sid))
+    //   .catch(error => console.error(error));
 
     res.status(200).json({ message: "OTP generated successfully" });
     next();

@@ -13,17 +13,26 @@ const UserSchema = new mongoose.Schema({
   community: { type: String },
   otp: {type: Number, trim: true},
   referral: {
-    referralCode:{
-      type: String,
-      unique: true
+    referralCode: {
+      type: String
     },
-    referredBy:{
+    referredBy: {
       type: Number
     },
-    referralCount:{
-      type:Number,
+    referralCount: {
+      type: Number,
       default: 0
-    }
+    },
+    referralChain: [
+      {
+        level: Number,
+        user_id: Number
+      }
+    ],
+    rewardsEarned: {
+      type: Number,
+      default: 0
+    },
   }
 });
 

@@ -25,6 +25,8 @@ run().catch(console.dir);
 const adminRoutes = require("./routes/admin");
 const opinionRoutes = require("./routes/opinion")
 const userRoutes = require("./routes/user");
+const userbidRoutes = require("./routes/userbid");
+
 
 // Middlewares
 app.use(express.json());
@@ -34,6 +36,7 @@ app.use(cors());
 app.use("/api/admins", adminRoutes);
 app.use("/api/opinions", opinionRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/userbid",userbidRoutes);
 
 app.listen(PORT, () => {
   console.log(`server started on port ${PORT}`);
