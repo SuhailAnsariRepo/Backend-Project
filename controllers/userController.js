@@ -190,11 +190,11 @@ const generateOTP = async (req, res, next) => {
       .then(message => console.log(message.sid))
       .catch(error => console.error(error));
 
-    res.status(200).json({ message: "OTP generated successfully" });
+    res.status(200).json({ otp: random });
     next();
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ otp: "Something went wrong" });
   }
 };
 
