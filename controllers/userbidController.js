@@ -1,23 +1,55 @@
 const User = require("../model/User_Bid");
-const Opinion = require("../model/Opinion");
 
 //Get All Users
 const all_bids = async (req, res) => {
-     try {
-      const userbids = await User.find()
-      .populate({
-        path: 'opinion_id',
-        select: 'title -_id',
-        model: Opinion,
-        match: { opinion_id: { $exists: true } }
-      })
-      .lean()
-      .exec();
+  try {
+    const { bid_option, opinion_id, mobile} = req.query;
   
-      res.json(userbids);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+    // Build the filter object based on query parameters
+    const filter = {};
+    if (bid_option) {
+      filter.bid_option = JSON.parse(bid_option);
     }
+    if (opinion_id) {
+      filter.opinion_id = parseInt(opinion_id);
+    }
+    if (mobile) {
+      filter.mobile = parseInt(mobile);;
+    }
+    
+    console.log(filter);
+    const users = await User.aggregate([
+      {
+        $match: 
+          filter
+      },
+      {
+        $lookup: {
+          from: 'opinions',
+          localField: 'opinion_id',
+          foreignField: 'opinion_id',
+          as: 'opinions'
+        }
+      },
+      {
+        $project: {
+          mobile:1,
+          opinion_id:1,
+          bid_option:1,
+          amount:1,
+          timestamp:1,
+          transaction_detail:1,
+          settlement_status:1,
+          no_of_share:1,
+          'opinions.title': 1,
+          'opinions.description': 1
+        }
+      }
+    ]);
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 //Get Single User
@@ -40,8 +72,8 @@ const add_bid = async (req, res) => {
     const { mobile, opinion_id, bid_option, amount, no_of_share} = req.body;
 
     // Validate user input
-    if (!(opinion_id && mobile && bid_option && amount && no_of_share)) {
-      res.status(400).send("All input is required");
+    if (!(opinion_id && mobile && bid_option==true|| bid_option==false && amount && no_of_share)) {
+      return res.status(400).send("All input is required");
     }
 
     // check if user already exist
@@ -61,7 +93,7 @@ const add_bid = async (req, res) => {
         timestamp: req.body.timestamp,
         transaction_detail: req.body.transaction_detail,
         settlement_status: req.body.settlement_status,
-        no_of_share: req.body.no_of_share
+        no_of_share: req.body.no_of_share,
       });
     
       try {

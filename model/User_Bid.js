@@ -8,7 +8,7 @@ const User_BidSchema = new mongoose.Schema({
     },
     opinion_id: { 
         type: Number, 
-        unique: true 
+        unique: true
     },
     bid_option:{
         type: Boolean
