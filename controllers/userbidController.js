@@ -42,7 +42,9 @@ const all_bids = async (req, res) => {
           settlement_status:1,
           no_of_share:1,
           'opinions.title': 1,
-          'opinions.description': 1
+          'opinions.status': 1,
+          'opinions.final_result':1,
+          'opinions.trade_volume':1
         }
       }
     ]);
