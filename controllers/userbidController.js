@@ -80,11 +80,11 @@ const add_bid = async (req, res) => {
 
     // check if user already exist
     // Validate if user exist in our database
-    const existingUser = await User.findOne({ mobile: mobile, opinion_id:opinion_id });
+    // const existingUser = await User.findOne({ mobile: mobile, opinion_id:opinion_id });
 
-    if (existingUser) {
-      return res.status(409).json({ message: "Admin Already Exist. Please Login" });
-    }
+    // if (existingUser) {
+    //   return res.status(409).json({ message: "Opimion_id Already Exist. Please Login" });
+    // }
 
   console.log("inside put")
     const user = new User({
