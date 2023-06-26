@@ -4,11 +4,9 @@ const User_BidSchema = new mongoose.Schema({
     mobile: { type: Number,
          required: true,
          trim: true,
-         unique: true
     },
     opinion_id: { 
         type: Number, 
-        unique: true
     },
     bid_option:{
         type: Boolean
